@@ -1,23 +1,256 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>オフラインカジノ - ルールブックページ</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゲームルール</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        h1 .material-symbols-outlined {
+            font-size: 32px;
+            color: #5f6368;
+        }
+
+        .search-box {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box .material-symbols-outlined {
+            color: #5f6368;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .rules-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .rule-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .rule-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .rule-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .rule-icon .material-symbols-outlined {
+            color: white;
+            font-size: 28px;
+        }
+
+        .rule-info {
+            flex: 1;
+        }
+
+        .rule-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .rule-desc {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .rule-arrow {
+            color: #999;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .no-results .material-symbols-outlined {
+            font-size: 64px;
+            color: #ccc;
+            margin-bottom: 16px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>オフラインカジノ - ルールブックページ</h1>
-  </header>
-  <main>
-    <section>
-      <h2>ルールブック</h2>
-      <p>ここにオフラインカジノのルールブックの内容が表示されます。</p>
-    </section>
-    <a href="pdf/ブラックジャック.pdf">ブラックジャック</a>
-    <a href="pdf/ポーカー.pdf">ポーカー</a>
-    <a href="pdf/ルーレット.pdf">ルーレット</a>
-    <a href="pdf/射的.pdf">射的</a>
-  </main>
+    <div class="container">
+        <header>
+            <h1>
+                <span class="material-symbols-outlined">menu_book</span>
+                資料
+            </h1>
+        </header>
+
+        <div class="search-box">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" id="searchInput" placeholder="種目を検索...">
+        </div>
+
+        <div class="rules-grid" id="rulesGrid"></div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <span class="material-symbols-outlined">search_off</span>
+            <p>該当する種目が見つかりませんでした</p>
+        </div>
+
+        <footer>
+            <p>タップして資料を開く</p>
+        </footer>
+    </div>
+
+    <script>
+        const gameRules = [
+            {
+                title: 'ポーカー',
+                icon: 'poker_chip',
+                desc: 'ポーカーのルール',
+                pdf: 'ポーカー.pdf'
+            },
+            {
+                title: '射的',
+                icon: 'rewarded_ads',
+                desc: '射的のルール',
+                pdf: '射的.pdf'
+            },
+            {
+                title: 'ブラックジャック',
+                icon: 'playing_cards',
+                desc: 'ブラックジャックのルール',
+                pdf: 'ブラックジャック.pdf'
+            },
+            {
+                title: '輪投げ',
+                icon: 'circle',
+                desc: '輪投げのルール',
+                pdf: '輪投げ.pdf'
+            },
+            {
+                title: 'ルーレット',
+                icon: 'casino',
+                desc: 'ルーレットのルール',
+                pdf: 'ルーレット.pdf'
+            },
+        ];
+
+        function renderRules(rules) {
+            const grid = document.getElementById('rulesGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (rules.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            noResults.style.display = 'none';
+            
+            grid.innerHTML = rules.map(rule => `
+                <a href="${rule.pdf}" class="rule-card" target="_blank">
+                    <div class="rule-icon">
+                        <span class="material-symbols-outlined">${rule.icon}</span>
+                    </div>
+                    <div class="rule-info">
+                        <div class="rule-title">${rule.title}</div>
+                        <div class="rule-desc">${rule.desc}</div>
+                    </div>
+                    <span class="material-symbols-outlined rule-arrow">chevron_right</span>
+                </a>
+            `).join('');
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = gameRules.filter(rule => 
+                rule.title.toLowerCase().includes(query) || 
+                rule.desc.toLowerCase().includes(query)
+            );
+            renderRules(filtered);
+        });
+
+        renderRules(gameRules);
+    </script>
 </body>
 </html>
